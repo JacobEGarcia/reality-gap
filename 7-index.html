@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>REALITY GAP - same policy, two worlds</title>
+<meta name="description" content="Two simulated robot arms run the same block-stacking policy. One has ideal dynamics, the other has actuator noise, calibration drift, and grip slips. The gap is the point.">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#0b0d10;color:#dfe7ee;font-family:'JetBrains Mono',monospace;overflow:hidden}
+  #c{position:fixed;inset:0;display:block}
+  .tag{position:fixed;top:16px;font-size:12px;font-weight:700;letter-spacing:.6px;padding:8px 14px;border-radius:8px;background:rgba(10,12,16,.72);border:1px solid rgba(255,255,255,.08)}
+  #tagSim{left:6%}.tag small{display:block;font-weight:400;color:#7d8a97;margin-top:2px;letter-spacing:0}
+  #tagReal{right:6%}
+  #stats{position:fixed;top:16px;left:50%;transform:translateX(-50%);text-align:center;background:rgba(10,12,16,.72);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 18px;font-size:11px;line-height:1.8}
+  #stats .gap{font-size:18px;font-weight:700;color:#facc15}
+  #chart{position:fixed;left:50%;transform:translateX(-50%);bottom:76px;background:rgba(10,12,16,.72);border:1px solid rgba(255,255,255,.08);border-radius:8px}
+  .bar{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);display:flex;gap:8px;align-items:center;background:rgba(10,12,16,.72);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;font-size:11px}
+  .bar label{color:#9fb0bd;margin-right:4px}
+  .bar input[type=range]{width:110px;accent-color:#3b82f6}
+  .bar button{background:#1b2129;color:#dfe7ee;border:1px solid rgba(255,255,255,.12);border-radius:8px;font:11px 'JetBrains Mono',monospace;padding:7px 11px;cursor:pointer}
+  .bar button:hover{background:#242d38}
+  .note{position:fixed;left:14px;bottom:16px;color:#5f6c78;font-size:10px;max-width:250px;line-height:1.5}
+  @media(max-width:720px){.note{display:none}#stats{font-size:10px;padding:8px 10px;max-width:70vw}.tag{font-size:10px;top:auto;bottom:210px;padding:5px 8px}#tagSim{left:4%}#tagReal{right:4%}#chart{display:none}.bar{flex-wrap:wrap;justify-content:center;max-width:92vw}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="tag" id="tagSim">SIM<small>ideal dynamics</small></div>
+<div class="tag" id="tagReal">"REAL"<small>noise + drift + grip slips</small></div>
+<div id="stats">
+  <div>sim success <b id="simRate">100%</b> &nbsp;&middot;&nbsp; "real" success <b id="realRate">100%</b></div>
+  <div class="gap" id="gap">gap 0%</div>
+  <div style="color:#7d8a97">towers: sim <b id="simTowers">0</b> &middot; "real" <b id="realTowers">0</b> &nbsp; cycles <b id="cycles">0</b></div>
+</div>
+<canvas id="chart" width="360" height="70"></canvas>
+<div class="bar">
+  <label>noise</label><input type="range" id="noise" min="0" max="100" value="45">
+  <label>drift</label><input type="range" id="drift" min="0" max="100" value="35">
+  <label>speed</label><input type="range" id="speed" min="25" max="300" value="100">
+  <button id="recal">RECALIBRATE</button><button id="reset">RESET</button>
+</div>
+<div class="note">Both sides are simulations. "Real" is a noise model with drifting calibration. The gap between them is what sim-to-real people lose sleep over.</div>
+<script type="importmap">{"imports":{"three":"./three.module.js","three/addons/controls/OrbitControls.js":"./OrbitControls.js"}}</script>
+<script type="module" src="./app.js"></script>
+</body>
+</html>
